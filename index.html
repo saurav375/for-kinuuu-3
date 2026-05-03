@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-accent: #ff85a1;
+            --blue-accent: #74b9ff;
+            --glass: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        * { box-sizing: border-box; transition: all 0.4s ease; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Floating Petal Animation */
+        .petals { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .petal { position: absolute; background: #fff; border-radius: 150% 0 150% 0; animation: fall 10s infinite linear; opacity: 0.7; }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); left: var(--left); }
+            100% { transform: translateY(110vh) rotate(360deg); left: calc(var(--left) + 10%); }
+        }
+
+        /* Main Card Styling */
+        .glass-card {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .hidden { opacity: 0; pointer-events: none; display: none; }
+        .fade-in { animation: fadeIn 0.8s forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Typography & Elements */
+        h1 { font-family: 'Dancing Script', cursive; color: #d63031; font-size: 2.8rem; margin-bottom: 10px; }
+        p { color: #636e72; font-size: 1rem; line-height: 1.5; }
+
+        .btn-creative {
+            background: linear-gradient(to right, var(--pink-accent), var(--blue-accent));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 133, 161, 0.3);
+            margin-top: 20px;
+        }
+
+        .btn-creative:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 133, 161, 0.4); }
+
+        /* Loading Bar Enhancement */
+        .loader-container { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .loader-bar { height: 100%; width: 0%; background: var(--pink-accent); }
+
+        /* Interactive Note Styling */
+        .note-card {
+            background: #fff;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            border-left: 5px solid var(--blue-accent);
+            text-align: left;
+            position: relative;
+        }
+
+        .note-card.active { border-left-color: var(--pink-accent); background: #fff5f7; }
+        .note-text { font-weight: 600; color: #2d3436; }
+        .note-hidden { max-height: 0; overflow: hidden; color: #b2bec3; font-size: 0.9rem; margin-top: 5px; }
+        .note-card.active .note-hidden { max-height: 100px; padding-top: 10px; }
+
+        .big-heart { font-size: 4rem; animation: heartbeat 1.2s infinite; display: inline-block; }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        #music-frame { position: absolute; left: -9999px; }
+    </style>
+</head>
+<body>
+
+    <div class="petals" id="petalContainer"></div>
+    <div id="music-frame"></div>
+
+    <div class="glass-card" id="mainCard">
+        <!-- Section 1 -->
+        <div id="step1" class="fade-in">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndW5yYXo1dmh3YnI1eXh3eXh3eXh3eXh3eXh3eXh3eXh3ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/L40pC6Nks8d4d/giphy.gif" width="120">
+            <h1>Hey Anushree cutiepie</h1>
+            <p>Do you even know how cute you are?</p>
+            <button class="btn-creative" onclick="goStep2()">Check Cuteness Level</button>
+        </div>
+
+        <!-- Section 2 -->
+        <div id="step2" class="hidden">
+            <p>Measuring your cuteness... ⏳</p>
+            <div id="countDisplay" style="font-size: 3rem; font-weight: 600; color: var(--pink-accent);">0%</div>
+            <div class="loader-container"><div class="loader-bar" id="bar"></div></div>
+            
+            <div id="warning" class="hidden">
+                <h3 style="color: #ff7675;">⚠️ Warning: Too cute to handle!</h3>
+                <button class="btn-creative" onclick="goStep3()">Continue Anyway</button>
+            </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div id="step3" class="hidden">
+            <span class="big-heart">💖</span>
+            <p>Tap each one to reveal</p>
+            <div class="note-card" onclick="openNote(this, 1)">
+                <div class="note-text">Click Cutieee ❤️</div>
+                <div class="note-hidden">I messed up... and I'm really sorry for that...</div>
+            </div>
+            <div class="note-card" onclick="openNote(this, 2)">
+                <div class="note-text">Click Cutieee ❤️</div>
+                <div class="note-hidden">I promise I won't leave you.</div>
+            </div>
+            <div class="note-card" onclick="openNote(this, 3)">
+                <div class="note-text">Click Cutieee ❤️</div>
+                <div class="note-hidden">Please forgive me... you are so valuable to me.</div>
+            </div>
+            <button id="seeMoreBtn" class="btn-creative hidden" onclick="goStep4()">See More</button>
+        </div>
+
+        <!-- Section 4 -->
+        <div id="step4" class="hidden">
+            <p>A little note for you...</p>
+            <div style="font-size: 3rem; margin: 20px 0;">✉️</div>
+            <button class="btn-creative" style="border-radius: 50%; width: 70px; height: 70px; padding:0;" onclick="revealFinal()">💖🌻</button>
+            
+            <div id="finalContent" class="hidden" style="margin-top: 30px; text-align: left; background: white; padding: 20px; border-radius: 20px; border: 1px solid #ffeaa7;">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmN2bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/MDJ9uH6S1Zsc/giphy.gif" width="80" style="display: block; margin: 0 auto;">
+                <p>I'm really sorry, my love. I upset the most precious and adorable person in my life — You 🤗</p>
+                <p>Please forgive me my <b>PUCHUu😘💖</b> I won't leave you in this life or any other life. I promise.</p>
+                <h2 style="color: var(--pink-accent); text-align: center; margin-top: 20px;">I Love You</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Floating Petals
+        const petalContainer = document.getElementById('petalContainer');
+        for (let i = 0; i < 15; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.width = Math.random() * 15 + 10 + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.setProperty('--left', Math.random() * 100 + '%');
+            petal.style.animationDelay = Math.random() * 10 + 's';
+            petalContainer.appendChild(petal);
+        }
+
+        function goStep2() {
+            document.getElementById('music-frame').innerHTML = `<iframe width="1" height="1" src="https://www.youtube.com/embed/0n18ON2FoEY?autoplay=1" frameborder="0" allow="autoplay"></iframe>`;
+            
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('step2').classList.add('fade-in');
+
+            let count = 0;
+            const bar = document.getElementById('bar');
+            const display = document.getElementById('countDisplay');
+            
+            const timer = setInterval(() => {
+                count += 20;
+                display.innerText = count + "%";
+                bar.style.width = (count / 10) + "%";
+                if (count >= 1000) {
+                    clearInterval(timer);
+                    document.getElementById('warning').classList.remove('hidden');
+                    document.getElementById('warning').classList.add('fade-in');
+                }
+            }, 30);
+        }
+
+        function goStep3() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').style.display = 'block';
+            document.getElementById('step3').classList.add('fade-in');
+        }
+
+        let openedNotes = 0;
+        function openNote(el, id) {
+            if (!el.classList.contains('active')) {
+                el.classList.add('active');
+                openedNotes++;
+                if (openedNotes === 3) {
+                    document.getElementById('seeMoreBtn').classList.remove('hidden');
+                    document.getElementById('seeMoreBtn').classList.add('fade-in');
+                }
+            }
+        }
+
+        function goStep4() {
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('step4').style.display = 'block';
+            document.getElementById('step4').classList.add('fade-in');
+        }
+
+        function revealFinal() {
+            document.getElementById('finalContent').classList.remove('hidden');
+            document.getElementById('finalContent').classList.add('fade-in');
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 200);
+        }
+    </script>
+</body>
+</html>
